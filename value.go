@@ -20,6 +20,10 @@ func (v *Value) g() *C.GValue {
 	return (*C.GValue)(v)
 }
 
+func (v *Value) GetPtr() Pointer {
+	return Pointer (v)
+}
+
 // Returns v's type.
 func (v *Value) Type() Type {
 	return Type(v.g_type)

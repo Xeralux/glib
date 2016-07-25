@@ -10,6 +10,12 @@ GType _object_type(GObject* o) {
 	return G_OBJECT_TYPE(o);
 }
 
+GParamSpec *
+_object_find_property (GObject *o, const gchar *name) {
+	return g_object_class_find_property (G_OBJECT_GET_CLASS (o), name);
+}
+
+
 typedef struct {
 	GClosure cl;
 	gulong h_id;
@@ -131,6 +137,20 @@ func (o *Object) Type() Type {
 
 func (o *Object) AsObject() *Object {
 	return o
+}
+
+func (o *Object) FindProperty (name string) *ParamSpec {
+	s := C.CString (name)
+	defer C.free (unsafe.Pointer (s))
+
+	cps := C._object_find_property (o.g(), (*C.gchar) (s))
+	if cps == nil {
+		return nil
+	}
+
+	ps := new (ParamSpec)
+	ps.SetPtr (Pointer (cps))
+	return ps
 }
 
 func (o *Object) Value() *Value {
