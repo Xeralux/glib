@@ -250,5 +250,10 @@ func (v *Value) GetType() Type {
 }
 
 func (v *Value) String() string {
-	return fmt.Sprint(v.Get())
+	gv := v.Get()
+	if gv == v {
+		/*  Value returned unchanged; we don't know what it is.  */
+		return fmt.Sprint ("(unknown value type: ", v.Type(), ")")
+	}
+	return fmt.Sprint (gv)
 }
